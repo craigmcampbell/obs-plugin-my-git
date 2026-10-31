@@ -1,0 +1,9 @@
+{
+	"id": "my-git",
+	"name": "My Git",
+	"version": "0.1.0",
+	"minAppVersion": "1.13.0",
+	"description": "Commit, pull and push the vault's git repository from the sidebar.",
+	"author": "Craig Campbell",
+	"isDesktopOnly": true
+}
