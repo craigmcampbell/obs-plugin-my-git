@@ -22,3 +22,6 @@ data.json
 .DS_Store
 
 .hotreload
+
+# Local build settings (OBSIDIAN_PLUGIN_DIR)
+.env.local

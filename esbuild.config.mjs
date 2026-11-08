@@ -1,6 +1,7 @@
 import esbuild from 'esbuild';
 import process from 'process';
 import { builtinModules } from 'node:module';
+import { existsSync } from 'node:fs';
 import { copyFile, mkdir, writeFile } from 'node:fs/promises';
 
 const banner = `/*
@@ -11,10 +12,14 @@ if you want to view the source, please visit the github repository of this plugi
 
 const prod = process.argv[2] === 'production';
 
-// dist/ holds everything a vault needs: copy it to <vault>/.obsidian/plugins/<plugin id>/.
-const outdir = 'dist';
+// The build writes the installable plugin into OBSIDIAN_PLUGIN_DIR, normally <vault>/.obsidian/plugins/<plugin id>,
+// so Obsidian loads it there and its data.json lives with the vault. Set it in the shell or in a gitignored .env.local
+// (the shell wins); without it the build falls back to dist/. The build never writes data.json.
+// Why: ai-hub/docs/adr/0003-build-into-the-vault.md
+if (existsSync('.env.local')) process.loadEnvFile('.env.local');
+const outdir = process.env.OBSIDIAN_PLUGIN_DIR || 'dist';
 
-/** Copies manifest.json and styles.css next to main.js after every build, so dist/ is always complete. */
+/** Copies manifest.json and styles.css next to main.js after every build, so the output folder is always complete. */
 const completeDist = {
 	name: 'complete-dist',
 	setup(build) {
